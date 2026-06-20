@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BMI Calculator</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI',sans-serif;
+}
+
+body{
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:linear-gradient(135deg,#4facfe,#00f2fe);
+}
+
+.container{
+    width:380px;
+    background:white;
+    padding:30px;
+    border-radius:20px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.2);
+}
+
+h2{
+    text-align:center;
+    color:#333;
+    margin-bottom:20px;
+}
+
+label{
+    display:block;
+    margin-top:12px;
+    margin-bottom:5px;
+    font-weight:600;
+}
+
+input,select{
+    width:100%;
+    padding:12px;
+    border:1px solid #ddd;
+    border-radius:10px;
+    outline:none;
+}
+
+.row{
+    display:flex;
+    gap:10px;
+}
+
+button{
+    width:100%;
+    margin-top:20px;
+    padding:12px;
+    border:none;
+    border-radius:10px;
+    background:#4facfe;
+    color:white;
+    font-size:16px;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#008cff;
+}
+
+.result{
+    margin-top:20px;
+    text-align:center;
+}
+
+.bmi{
+    font-size:28px;
+    font-weight:bold;
+    color:#4facfe;
+}
+
+.category{
+    font-size:18px;
+    margin-top:8px;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h2>BMI Calculator</h2>
+
+    <label>Height Unit</label>
+    <select id="heightUnit">
+        <option value="cm">CM</option>
+        <option value="feet">Feet & Inches</option>
+    </select>
+
+    <div id="cmInput">
+        <label>Height (CM)</label>
+        <input type="number" id="cm" placeholder="Enter height">
+    </div>
+
+    <div id="feetInput" style="display:none;">
+        <label>Height</label>
+        <div class="row">
+            <input type="number" id="feet" placeholder="Feet">
+            <input type="number" id="inch" placeholder="Inches">
+        </div>
+    </div>
+
+    <label>Weight (KG)</label>
+    <input type="number" id="weight" placeholder="Enter weight">
+
+    <button onclick="calculateBMI()">Calculate BMI</button>
+
+    <div class="result">
+        <div class="bmi" id="bmiValue"></div>
+        <div class="category" id="category"></div>
+    </div>
+</div>
+
+<script>
+const heightUnit = document.getElementById("heightUnit");
+
+heightUnit.addEventListener("change", () => {
+    if(heightUnit.value === "cm"){
+        document.getElementById("cmInput").style.display="block";
+        document.getElementById("feetInput").style.display="none";
+    }else{
+        document.getElementById("cmInput").style.display="none";
+        document.getElementById("feetInput").style.display="block";
+    }
+});
+
+function calculateBMI(){
+    let height;
+
+    if(heightUnit.value === "cm"){
+        height = document.getElementById("cm").value / 100;
+    }else{
+        let feet = parseFloat(document.getElementById("feet").value) || 0;
+        let inch = parseFloat(document.getElementById("inch").value) || 0;
+
+        let totalInches = (feet * 12) + inch;
+        height = totalInches * 0.0254;
+    }
+
+    let weight = parseFloat(document.getElementById("weight").value);
+
+    if(!height || !weight){
+        alert("Please enter valid details");
+        return;
+    }
+
+    let bmi = weight / (height * height);
+    bmi = bmi.toFixed(1);
+
+    let category = "";
+
+    if(bmi < 18.5)
+        category = "Underweight";
+    else if(bmi < 25)
+        category = "Normal Weight";
+    else if(bmi < 30)
+        category = "Overweight";
+    else
+        category = "Obese";
+
+    document.getElementById("bmiValue").innerHTML = bmi;
+    document.getElementById("category").innerHTML = category;
+}
+</script>
+
+</body>
+</html>
